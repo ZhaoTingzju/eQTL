@@ -1,7 +1,7 @@
 # eQTL
 eQTL project
 
-###1 Filter_low_expressed_transcript.pl
+1 Filter_low_expressed_transcript.pl
 Options:
 
         -i        <s> : data_frame of input data, head is required .
