@@ -37,6 +37,6 @@ awk '$3 == "x"|| $3 == "u"|| $3 == "i" {print $0}' merged_lncRNA.merged.gtf.tmap
 awk '$11 >200 {print}' novel.gtf.tmap > novel.longRNA.gtf.tmap
 awk '{print $5}' novel.longRNA.gtf.tmap | perl ~/zt_script/extract_gtf_by_name.pl merged.gtf - > novel.longRNA.gtf
 gffread -g ~/eGWAS/ref/TM-1_V2.1.fa -w exon.fa ./novel.longRNA.gtf
-transDecoder.LongOrfs -t exon.fa # This step generated a file named longest_orfs.ped
+TransDecoder.LongOrfs -t exon.fa # This step generated a file named longest_orfs.ped
 
 
