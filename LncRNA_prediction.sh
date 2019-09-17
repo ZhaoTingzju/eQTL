@@ -7,17 +7,15 @@
 # pfam_scan
 # TransDecoder V5.3.0
 
-
-
 ### building genome index
-$extract_splice_sites.py TM-1_V2.1.gene.gtf > TM-1_V2.1.ss 
-$ extract_exons.py TM-1_V2.1.gene.gtf > TM-1_V2.1.exon
-$ hisat2-build --ss TM-1_V2.1.ss --exon TM-1_V2.1.exon TM-1_V2.1.fa TM-1_V2.1
+extract_splice_sites.py TM-1_V2.1.gene.gtf > TM-1_V2.1.ss 
+extract_exons.py TM-1_V2.1.gene.gtf > TM-1_V2.1.exon
+hisat2-build --ss TM-1_V2.1.ss --exon TM-1_V2.1.exon TM-1_V2.1.fa TM-1_V2.1
 ### mapping
-$stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V001-V002-1.sam.sorted.bam.gtf V001-V002-1.sam.sorted.bam
-$stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V001-V002.sam.sorted.bam.gtf V001-V002.sam.sorted.bam
-$stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V003-V004-1.sam.sorted.bam.gtf V003-V004-1.sam.sorted.bam
-$stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V003-V004.sam.sorted.bam.gtf V003-V004.sam.sorted.bam
+stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V001-V002-1.sam.sorted.bam.gtf V001-V002-1.sam.sorted.bam
+stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V001-V002.sam.sorted.bam.gtf V001-V002.sam.sorted.bam
+stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V003-V004-1.sam.sorted.bam.gtf V003-V004-1.sam.sorted.bam
+stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V003-V004.sam.sorted.bam.gtf V003-V004.sam.sorted.bam
 ....
 /public/home/zhaoting/biosoftware/samtools-1.6/samtools sort -@ 1 -o V001-V002-1.sam.sorted.bam V001-V002-1.sam && rm V001-V002-1.sam
 /public/home/zhaoting/biosoftware/samtools-1.6/samtools sort -@ 1 -o V001-V002.sam.sorted.bam V001-V002.sam && rm V001-V002.sam
@@ -39,17 +37,23 @@ awk '{print $5}' novel.longRNA.gtf.tmap | perl ~/zt_script/extract_gtf_by_name.p
 gffread -g ~/eGWAS/ref/TM-1_V2.1.fa -w exon.fa ./novel.longRNA.gtf
 TransDecoder.LongOrfs -t exon.fa # This step generated a file named longest_orfs.ped
 pfam_scan.pl -cpu 8 -fasta ./longest_orfs.pep -dir ~/biosoftware/PfamScan/base/ > pfam_scan_eQTL.txt
-No
- ~/biosoftware/CPC2-beta/bin/CPC2.py -i exon.fa -o cpc_output.txt
- perl -ne 'print if /noncoding/' cpc_output.txt |cut -f 1 > Novel_transcript_cpc_nocoding.txt
+~/biosoftware/CPC2-beta/bin/CPC2.py -i exon.fa -o cpc_output.txt
+perl -ne 'print if /noncoding/' cpc_output.txt |cut -f 1 > Novel_transcript_cpc_nocoding.txt
  # 求交集
- cat Novel_transcript_cpc_nocoding.txt Novel.transcript_with_domain.txt |sort|uniq -d > intersection.txt
- sort Novel_transcript_cpc_nocoding.txt intersection.txt intersection.txt |uniq -u > lncRNA_list.txt
- 
+cat Novel_transcript_cpc_nocoding.txt Novel.transcript_with_domain.txt |sort|uniq -d > intersection.txt
+sort Novel_transcript_cpc_nocoding.txt intersection.txt intersection.txt |uniq -u > lncRNA_list.txt
 cat lncRNA_list.txt| perl ~/zt_script/extract_gtf_by_name.pl merged.gtf - > LncRNA.gtf
+cat  LncRNA.gtf TM-1_V2.1.gene.gtf > lncRNA
+rm intersection.txt
  
- 
- 
- 
+## Estimate transcript abundances
+stringtie -A V001-V002-1.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V001-V002-1.sam.sorted.bam
+stringtie -A V001-V002.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V001-V002.sam.sorted.bam
+stringtie -A V003-V004-1.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V003-V004-1.sam.sorted.bam
+stringtie -A V003-V004.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V003-V004.sam.sorted.bam
+stringtie -A V007-V008-1.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V007-V008-1.sam.sorted.bam
+
+
+
 
 
