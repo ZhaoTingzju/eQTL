@@ -12,10 +12,14 @@ extract_splice_sites.py TM-1_V2.1.gene.gtf > TM-1_V2.1.ss
 extract_exons.py TM-1_V2.1.gene.gtf > TM-1_V2.1.exon
 hisat2-build --ss TM-1_V2.1.ss --exon TM-1_V2.1.exon TM-1_V2.1.fa TM-1_V2.1
 ### mapping
-stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V001-V002-1.sam.sorted.bam.gtf V001-V002-1.sam.sorted.bam
-stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V001-V002.sam.sorted.bam.gtf V001-V002.sam.sorted.bam
-stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V003-V004-1.sam.sorted.bam.gtf V003-V004-1.sam.sorted.bam
-stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V003-V004.sam.sorted.bam.gtf V003-V004.sam.sorted.bam
+
+hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V001-V002.R1.clean.fastq.gz -2 V001-V002.R2.clean.fastq.gz -S V001-V002.sam
+hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V001-V002-1.R1.clean.fastq.gz -2 V001-V002-1.R2.clean.fastq.gz -S V001-V002-1.sam
+hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V003-V004.R1.clean.fastq.gz -2 V003-V004.R2.clean.fastq.gz -S V003-V004.sam
+hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V003-V004-1.R1.clean.fastq.gz -2 V003-V004-1.R2.clean.fastq.gz -S V003-V004-1.sam
+hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V007-V008.R1.clean.fastq.gz -2 V007-V008.R2.clean.fastq.gz -S V007-V008.sam
+hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V007-V008-1.R1.clean.fastq.gz -2 V007-V008-1.R2.clean.fastq.gz -S V007-V008-1.sam
+hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V009-V010.R1.clean.fastq.gz -2 V009-V010.R2.clean.fastq.gz -S V009-V010.sam
 ....
 /public/home/zhaoting/biosoftware/samtools-1.6/samtools sort -@ 1 -o V001-V002-1.sam.sorted.bam V001-V002-1.sam && rm V001-V002-1.sam
 /public/home/zhaoting/biosoftware/samtools-1.6/samtools sort -@ 1 -o V001-V002.sam.sorted.bam V001-V002.sam && rm V001-V002.sam
