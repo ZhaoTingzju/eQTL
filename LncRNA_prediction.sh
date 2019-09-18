@@ -20,6 +20,11 @@ hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V003-V004-1.R1.clean.fastq.gz -2 V00
 hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V007-V008.R1.clean.fastq.gz -2 V007-V008.R2.clean.fastq.gz -S V007-V008.sam
 hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V007-V008-1.R1.clean.fastq.gz -2 V007-V008-1.R2.clean.fastq.gz -S V007-V008-1.sam
 hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V009-V010.R1.clean.fastq.gz -2 V009-V010.R2.clean.fastq.gz -S V009-V010.sam
+
+#If its single ended data and forward stranded you need to set: -rna-strandness F If its paired end data and forward stranded you need to set: -rna-strandness FR
+#Similar, if its reverse stranded for SE data: -rna-strandness R or (Paired End, reverse stranded) -rna-strandness RF
+# most strand-specific data are fr-firststrand , use -rna-strandness RF
+
 ....
 /public/home/zhaoting/biosoftware/samtools-1.6/samtools sort -@ 1 -o V001-V002-1.sam.sorted.bam V001-V002-1.sam && rm V001-V002-1.sam
 /public/home/zhaoting/biosoftware/samtools-1.6/samtools sort -@ 1 -o V001-V002.sam.sorted.bam V001-V002.sam && rm V001-V002.sam
