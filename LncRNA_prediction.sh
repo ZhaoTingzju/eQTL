@@ -8,6 +8,7 @@
 # TransDecoder V5.3.0
 
 ### building genome index
+gffread -T -o TM-1_V2.1.gene.gtf TM-1_V2.1.gene.gff3
 extract_splice_sites.py TM-1_V2.1.gene.gtf > TM-1_V2.1.ss 
 extract_exons.py TM-1_V2.1.gene.gtf > TM-1_V2.1.exon
 hisat2-build --ss TM-1_V2.1.ss --exon TM-1_V2.1.exon TM-1_V2.1.fa TM-1_V2.1
