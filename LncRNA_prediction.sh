@@ -46,7 +46,7 @@ awk '$11 >200 {print}' novel.gtf.tmap > novel.longRNA.gtf.tmap
 awk '{print $5}' novel.longRNA.gtf.tmap | perl ~/zt_script/extract_gtf_by_name.pl merged.gtf - > novel.longRNA.gtf
 gffread -g ~/eGWAS/ref/TM-1_V2.1.fa -w exon.fa ./novel.longRNA.gtf
 TransDecoder.LongOrfs -t exon.fa # This step generated a file named longest_orfs.ped
-pfam_scan.pl -cpu 8 -fasta ./longest_orfs.pep -dir ~/biosoftware/PfamScan/base/ > pfam_scan_eQTL.txt
+pfam_scan.pl -cpu 8 -fasta ./exon.fa.transdecoder_dir/longest_orfs.pep -dir ~/biosoftware/PfamScan/base/ > pfam_scan_eQTL.txt
 ~/biosoftware/CPC2-beta/bin/CPC2.py -i exon.fa -o cpc_output.txt
 perl -ne 'print if /noncoding/' cpc_output.txt |cut -f 1 > Novel_transcript_cpc_nocoding.txt
  # 求交集
