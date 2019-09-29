@@ -55,7 +55,7 @@ perl -ne 'print if /noncoding/' cpc_output.txt |cut -f 1 > Novel_transcript_cpc_
 cat Novel_transcript_cpc_nocoding.txt Novel.transcript_with_domain.txt |sort|uniq -d > intersection.txt
 sort Novel_transcript_cpc_nocoding.txt intersection.txt intersection.txt |uniq -u > lncRNA_list.txt
 cat lncRNA_list.txt| perl ~/zt_script/extract_gtf_by_name.pl merged.gtf - > LncRNA.gtf
-cat  LncRNA.gtf TM-1_V2.1.gene.gtf > lncRNA
+cat  LncRNA.gtf TM-1_V2.1.gene.gtf > lncRNA_mRNA.gtf
 rm intersection.txt
  
 ## Estimate transcript abundances
