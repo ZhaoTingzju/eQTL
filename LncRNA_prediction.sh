@@ -7,12 +7,14 @@
 # pfam_scan
 # TransDecoder V5.3.0
 
-### building genome index
+### step1 : building genome index
 gffread -T -o TM-1_V2.1.gene.gtf TM-1_V2.1.gene.gff3
 extract_splice_sites.py TM-1_V2.1.gene.gtf > TM-1_V2.1.ss 
 extract_exons.py TM-1_V2.1.gene.gtf > TM-1_V2.1.exon
 hisat2-build --ss TM-1_V2.1.ss --exon TM-1_V2.1.exon TM-1_V2.1.fa TM-1_V2.1
-### mapping
+### step 2: mapping
+#ls *gz|perl -pi -e 's/.R[12].clean.fastq.gz//' > sample.txt
+# cat sample.txt|while read id; do hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 ${id}.R1.clean.fastq.gz -2 ${id}.R2.clean.fastq.gz -S ${id}.sam
 
 hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V001-V002.R1.clean.fastq.gz -2 V001-V002.R2.clean.fastq.gz -S V001-V002.sam
 hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V001-V002-1.R1.clean.fastq.gz -2 V001-V002-1.R2.clean.fastq.gz -S V001-V002-1.sam
@@ -25,13 +27,13 @@ hisat2 -p 8 --dta -x ../../ref/TM-1_V2.1 -1 V009-V010.R1.clean.fastq.gz -2 V009-
 #If its single ended data and forward stranded you need to set: -rna-strandness F If its paired end data and forward stranded you need to set: -rna-strandness FR
 #Similar, if its reverse stranded for SE data: -rna-strandness R or (Paired End, reverse stranded) -rna-strandness RF
 # most strand-specific data are fr-firststrand , use -rna-strandness RF
-
-....
+# ls *sam|while read id; do /public/home/zhaoting/biosoftware/samtools-1.6/samtools sort -@ 1 -o ${id}.sorted.bam $id 
 /public/home/zhaoting/biosoftware/samtools-1.6/samtools sort -@ 1 -o V001-V002-1.sam.sorted.bam V001-V002-1.sam && rm V001-V002-1.sam
 /public/home/zhaoting/biosoftware/samtools-1.6/samtools sort -@ 1 -o V001-V002.sam.sorted.bam V001-V002.sam && rm V001-V002.sam
 /public/home/zhaoting/biosoftware/samtools-1.6/samtools sort -@ 1 -o V003-V004-1.sam.sorted.bam V003-V004-1.sam && rm V003-V004-1.sam
 /public/home/zhaoting/biosoftware/samtools-1.6/samtools sort -@ 1 -o V003-V004.sam.sorted.bam V003-V004.sam && rm V003-V004.sam
 ### assemble
+#ls *bam|while read id; do stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o ${id}.gtf $id;done
 stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V001-V002-1.sam.sorted.bam.gtf V001-V002-1.sam.sorted.bam
 stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V001-V002.sam.sorted.bam.gtf V001-V002.sam.sorted.bam
 stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V003-V004-1.sam.sorted.bam.gtf V003-V004-1.sam.sorted.bam
@@ -48,10 +50,8 @@ gffread -g ~/eGWAS/ref/TM-1_V2.1.fa -w exon.fa ./novel.longRNA.gtf
 TransDecoder.LongOrfs -t exon.fa # This step generated a file named longest_orfs.ped
 pfam_scan.pl -cpu 8 -fasta ./exon.fa.transdecoder_dir/longest_orfs.pep -dir ~/biosoftware/PfamScan/base/ > pfam_scan_eQTL.txt
 perl -ne 'print if /Domain/' pfam_scan_eQTL.txt |perl -ne 'print $1."\n" if /::(.*?)::/' > Novel.transcript_with_domain.txt
-
 ~/biosoftware/CPC2-beta/bin/CPC2.py -i exon.fa -o cpc_output.txt
 perl -ne 'print if /noncoding/' cpc_output.txt |cut -f 1 > Novel_transcript_cpc_nocoding.txt
- # 求交集
 cat Novel_transcript_cpc_nocoding.txt Novel.transcript_with_domain.txt |sort|uniq -d > intersection.txt
 sort Novel_transcript_cpc_nocoding.txt intersection.txt intersection.txt |uniq -u > lncRNA_list.txt
 cat lncRNA_list.txt| perl ~/zt_script/extract_gtf_by_name.pl merged.gtf - > LncRNA.gtf
@@ -63,6 +63,7 @@ rm Novel.transcript_with_domain.txt
 rm pfam_scan_eQTL.txt
 
 ## Estimate transcript abundances
+#ls *bam|while read id; do stringtie -A ${id}_fpkm.txt -p 8 -G ./lncRNA_mRNA.gtf -o temp.gtf $id;done
 stringtie -A V001-V002-1.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V001-V002-1.sam.sorted.bam
 stringtie -A V001-V002.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V001-V002.sam.sorted.bam
 stringtie -A V003-V004-1.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V003-V004-1.sam.sorted.bam
