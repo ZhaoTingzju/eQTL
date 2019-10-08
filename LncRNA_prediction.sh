@@ -4,8 +4,10 @@
 #gffcompare v0.10.4
 #CPC,py 0.1
 #HMMER 3.1b2
-# pfam_scan
-# TransDecoder V5.3.0
+#pfam_scan
+#TransDecoder V5.3.0
+#bedtools v2.26.0
+
 
 ### step1 : building genome index
 gffread -T -o TM-1_V2.1.gene.gtf TM-1_V2.1.gene.gff3
@@ -38,6 +40,8 @@ stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V001-V002-1.sam.sorted.bam.gtf
 stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V001-V002.sam.sorted.bam.gtf V001-V002.sam.sorted.bam
 stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V003-V004-1.sam.sorted.bam.gtf V003-V004-1.sam.sorted.bam
 stringtie -G ../../ref/TM-1_V2.1.gene.gtf -p 2 -o V003-V004.sam.sorted.bam.gtf V003-V004.sam.sorted.bam
+# --rf if this data is fr-firstrand
+
 
 ### lncRNA prediction
 ls *gtf > mergelist.txt
@@ -69,7 +73,7 @@ stringtie -A V001-V002.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_
 stringtie -A V003-V004-1.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V003-V004-1.sam.sorted.bam
 stringtie -A V003-V004.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V003-V004.sam.sorted.bam
 stringtie -A V007-V008-1.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V007-V008-1.sam.sorted.bam
-
+## --rf
 
 
 
