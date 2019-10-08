@@ -57,7 +57,11 @@ sort Novel_transcript_cpc_nocoding.txt intersection.txt intersection.txt |uniq -
 cat lncRNA_list.txt| perl ~/zt_script/extract_gtf_by_name.pl merged.gtf - > LncRNA.gtf
 cat  LncRNA.gtf TM-1_V2.1.gene.gtf > lncRNA_mRNA.gtf
 rm intersection.txt
- 
+sortBed -i lncRNA_mRNA.gtf > 1 && mv 1 lncRNA_mRNA.gtf
+rm Novel_transcript_cpc_nocoding.txt
+rm Novel.transcript_with_domain.txt
+rm pfam_scan_eQTL.txt
+
 ## Estimate transcript abundances
 stringtie -A V001-V002-1.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V001-V002-1.sam.sorted.bam
 stringtie -A V001-V002.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V001-V002.sam.sorted.bam
