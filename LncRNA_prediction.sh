@@ -74,6 +74,8 @@ stringtie -A V003-V004-1.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gen
 stringtie -A V003-V004.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V003-V004.sam.sorted.bam
 stringtie -A V007-V008-1.sam.sorted.bam_fpkm.txt -p 8 -G ../../ref/TM-1_V2.1.gene_lncRNA.gtf -o temp.gtf V007-V008-1.sam.sorted.bam
 ## --rf
+## gtf2bed
+perl -ne 'print if /\ttranscript\t/' lncRNA_mRNA.gtf|perl -pi -e 's/gene_id.*?transcript_id "//'|perl -pi -e 's/";//'|awk '{print $1"\t"$4"\t"$5"\t"$9"\t"$6"\t"$7}' > Ga_lncRNA_mRNA.bed
 
 
 
